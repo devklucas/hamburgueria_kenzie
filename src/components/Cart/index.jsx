@@ -1,53 +1,56 @@
-import "./Cart.css"
+import {Container,BoxTitle,BoxContentCart,ProductsCart,Product,EmptyCart,TotalPrice}from "./styles"
+import {useCart} from '../../providers/cart'
 
-function Cart({currentSale,removeCart,cleanCart}){
 
-    let total ;
-    if(currentSale.length === 0 ){
-        total = 0
-    }else{
-    let arr = currentSale.map(item=> item.price)
+
+const Cart = () => {
+    const {currentSale,removeCart,cleanCart} = useCart()
     
-    total = arr.reduce((a,b) => {return a+b} )
-    }
+    let total = currentSale.length > 0 ? currentSale.reduce((a,b)=>a+(b.price*b.qtd),0) : null
+
     return (
-        <section className="cartBox">
-            <div className="boxTitle">
+        <Container className="cartBox">
+            <BoxTitle>
                  <h2>Carrinho de Compras</h2>
-            </div>
-            <div className="boxContentCar">
-                <ul className="productsCart">
-                    {currentSale.map(item=> 
+            </BoxTitle>
+             <BoxContentCart>
+                <ProductsCart>
+                    {currentSale && currentSale.map((item,index)=> 
                         (
-                        <li key={item.id}>
+                        <Product key={index}>
                         <figure><img src={item.img} alt={item.name}/></figure>
                         <aside className="description">
+                            <div>
                             <h3>{item.name}</h3>
+                            <p>{item.qtd > 1 ? `Qtd: ${item.qtd}x` : null}</p>
                             <span>{item.category}</span>
+                            </div>
+                            <button onClick={()=>removeCart(item.id)}>Remover</button>
                         </aside>
-                        <button onClick={()=>removeCart(item.id)}>Remover</button>
-                        </li>
+                            
+                            
+                        </Product>
                         )
                      
                     )
-                }
+                    }
                 <>{currentSale.length === 0?
-                <aside className="emptyCart">
+                <EmptyCart className="emptyCart">
                     <span>Sua sacola está vazia</span>
                     <p>Adicione itens</p>
-                </aside>
+                </EmptyCart>
                 :
-                <aside className="totalPrice">
+                <TotalPrice className="totalPrice">
                     <div>
                         <span>Total</span> 
-                        <p>R${(total).toFixed(2)}</p>
+                         <p>R${(total).toFixed(2)}</p> 
                     </div>
                     <button onClick={()=>cleanCart()}>REMOVER TODOS</button>
-                </aside>}</> 
-                </ul>
+                </TotalPrice>}</> 
+                </ProductsCart>
                
-            </div>
-        </section>        
+            </BoxContentCart> 
+        </Container>        
     )
 }
 export default Cart

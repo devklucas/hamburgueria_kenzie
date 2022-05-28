@@ -1,21 +1,33 @@
-import Product from "../Product"
-import "./ProductList.css"
+import { useProducts } from "../../providers/products";
+import { useCart } from "../../providers/cart";
+import {BoxContent,BoxVitrine} from './styles'
 
-function ProductList({products,handleClick}){
-    return (
-        <section className="boxContent">
-            <ul className="boxVitrine">
-                <>{products.map(item=><Product key={item.id}
-                id={item.id} 
-                name={item.name} 
-                category={item.category} 
-                price={item.price} 
-                img={item.img}
-                handleClick={handleClick}
-                />)}
-                </>    
-            </ul>
-        </section>
-    )
-}
-export default ProductList
+const ProductList = () => {
+  const { filterProducts} = useProducts();
+  const {handleClick} = useCart()
+  return (
+    <BoxContent>
+      <BoxVitrine>
+          {filterProducts && filterProducts.map((item)=>{
+              return(<li className="Card" key={item.id}>
+              <figure>
+                <img src={item.img} alt={item.name} />
+              </figure>
+              <section>
+                <h2>{item.name}</h2>
+                <span>{item.category}</span>
+                <p>
+                  {item.price.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </p>
+                <button onClick={()=>handleClick(item)}>Adicionar</button>
+              </section>
+            </li>)
+          })}
+      </BoxVitrine>
+    </BoxContent>
+  );
+};
+export default ProductList;

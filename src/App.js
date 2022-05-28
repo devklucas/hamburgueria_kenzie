@@ -1,58 +1,27 @@
-import './App.css';
-import { useEffect }  from 'react';
-import { useState }   from 'react';
+import GlobalStyle from './styles/index'
 import Cart           from './components/Cart';
 import ProductList    from './components/ProductsList';
+import { useProducts } from './providers/products';
+import {BoxHeader,ContentHeader,FormStyled,MainContainer} from './styles'
 
-function App() {
-
-  const [products, setProducts] = useState([]);
-  const [filterProducts, setFilterProducts] = useState([])
-  const [currentSale, setCurrentSale] = useState([])
-  
-  useEffect(()=>{
-    fetch('https://hamburgueria-kenzie-json-serve.herokuapp.com/products')
-    .then((response)=>response.json())
-    .then((data)=>setProducts(data))
-  })
-
-  const handleClick = (productId)=>{
-    let check = []
-    currentSale.map(item=>item.id === productId ? check.push(item) : null)
-    if(check.length===0){
-      let filtro = products.find(item => item.id === productId ?  item : null)
-      setCurrentSale([filtro,...currentSale])
-    }  
-  }
-
-  const showProducts = (input) =>{
-    const search = input.target.previousSibling.value
-    products.filter(item=> item.name.toLowerCase() === search.toLowerCase().trim() ? setFilterProducts([item]) : search === "" ? setFilterProducts(products):null)
-  }
-
-  const removeCart = (productId)=>{
-    const filtro = currentSale.filter(item=>item.id !== productId ? item : null)
-    setCurrentSale(filtro)
-  }
-  const cleanCart = ()=>setCurrentSale([])
-  
+const App = () => {
+    const {products,showProducts} = useProducts()
     return (
     <>
-        <header className="boxHeader">
-          <div>
+         <GlobalStyle></GlobalStyle>
+         <BoxHeader>
+          <ContentHeader>
               <img src="./logo.svg" alt="logo"/>
-              <span>
+              <FormStyled onChange={(e)=>showProducts(e.target.value)}>
                 <input type="text" placeholder="Digitar Pesquisa"/>
-                <button onClick={(evt)=>showProducts(evt)}>Pesquisar</button>
-              </span>
-          </div>
-        </header>
-        <main className='mainContainer'>
-            <ProductList 
-              products={filterProducts.length === 0 ? products : filterProducts}
-              handleClick={handleClick}/>
-            <Cart currentSale={currentSale} removeCart={removeCart} cleanCart={cleanCart}/>
-        </main>
+                <button type="submit">Pesquisar</button>
+              </FormStyled>
+          </ContentHeader>
+        </BoxHeader> 
+        <MainContainer>
+            <ProductList products={products}/>   
+            <Cart/> 
+        </MainContainer> 
     </>
   );
 }

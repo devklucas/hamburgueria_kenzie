@@ -1,9 +1,18 @@
-.Card{
+import styled from 'styled-components'
+
+export const BoxContent = styled.section`
+  display: flex;
+  margin:20px;
+  @media (min-width: 840px) {
+    align-items: center;
+    width: 70%;
+  }
+  .Card{
     display:flex;
     flex-direction: column;   
     justify-content: space-between;
     list-style: none;
-    border: 2px solid #E0E0E0;
+    border: 2px solid var(--color-secondary);
     height:344px;
     width: 280px;
     font-family: 'Inter';
@@ -12,9 +21,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #F5F5F5;
-    height:150;
-    width:280px;
+    background-color:var(--color-secondary-bg);
+    width:276px;
     margin:0
 
 }
@@ -42,16 +50,34 @@
     margin:0;
     font-size:14px;
     font-weight:600;
-    color:#27AE60;
+    color:var(--color-primary-bg);
 }
 .Card button{
-    background-color: #27AE60;
+    background-color: var(--color-primary-bg);
     border-radius: 8px;
     width:106px;
     height:40px;
-    color:#FFFFFF;
+    color:var(--color-white);
     font-weight:600;
     font-size:14px;
     outline: none;
     border:none;
 }
+`;
+export const BoxVitrine = styled.ul`
+  width: 90vw;
+  height: 348px;
+  display: flex;
+  column-gap: 4vw;
+  overflow-x: scroll;
+  @media (min-width: 840px) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    overflow-x: hidden;
+    gap: 1vw;
+    padding: 0;
+  }
+`;
